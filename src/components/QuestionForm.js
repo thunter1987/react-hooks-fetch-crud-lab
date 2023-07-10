@@ -3,10 +3,7 @@ import React, { useState } from "react";
 function QuestionForm(props) {
   const [formData, setFormData] = useState({
     prompt: "",
-    answer1: "",
-    answer2: "",
-    answer3: "",
-    answer4: "",
+    answers: [],
     correctIndex: 0,
   });
 
@@ -19,7 +16,14 @@ function QuestionForm(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
+    const config = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    };
+    fetch("http://localhost:4000/questions", config)
+      .then(r => r.json())
+    .then(questionData => {props.onAddQuestion(questionData)})
   }
 
   return (
@@ -40,7 +44,7 @@ function QuestionForm(props) {
           <input
             type="text"
             name="answer1"
-            value={formData.answer1}
+            value={formData.answers[0]}
             onChange={handleChange}
           />
         </label>
@@ -49,7 +53,7 @@ function QuestionForm(props) {
           <input
             type="text"
             name="answer2"
-            value={formData.answer2}
+            value={formData.answers[1]}
             onChange={handleChange}
           />
         </label>
@@ -58,7 +62,7 @@ function QuestionForm(props) {
           <input
             type="text"
             name="answer3"
-            value={formData.answer3}
+            value={formData.answers[2]}
             onChange={handleChange}
           />
         </label>
@@ -67,7 +71,7 @@ function QuestionForm(props) {
           <input
             type="text"
             name="answer4"
-            value={formData.answer4}
+            value={formData.answers[3]}
             onChange={handleChange}
           />
         </label>
@@ -78,10 +82,10 @@ function QuestionForm(props) {
             value={formData.correctIndex}
             onChange={handleChange}
           >
-            <option value="0">{formData.answer1}</option>
-            <option value="1">{formData.answer2}</option>
-            <option value="2">{formData.answer3}</option>
-            <option value="3">{formData.answer4}</option>
+            <option value="0">{formData.answers[0]}</option>
+            <option value="1">{formData.answers[1]}</option>
+            <option value="2">{formData.answers[2]}</option>
+            <option value="3">{formData.answers[3]}</option>
           </select>
         </label>
         <button type="submit">Add Question</button>
